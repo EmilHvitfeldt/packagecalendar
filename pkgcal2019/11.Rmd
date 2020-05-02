@@ -1,0 +1,120 @@
+---
+slug: "11"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 11: slide
+
+Welcome back for the 11th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the handy new package [slide](https://github.com/DavisVaughan/slide) by [Davis Vaughan](https://twitter.com/dvaughan32).
+The main purpose of **slide** is to provide a more general-purpose approach to sliding window functions.
+
+The package is not yet available from CRAN but can be downloaded with
+
+```{r, eval=FALSE}
+remotes::install_github("DavisVaughan/slide")
+```
+
+The package on the surface looks a lot like [purrr](https://purrr.tidyverse.org/).
+You have 3 main functions `slide()`, `slide_index()` and `slide_between()`,
+who all have `**_dbl()`, `**2()` and `p**()` variants.
+
+For the examples, we will use the data we also used for [day 1](https://www.hvitfeldt.me/pkgcal2019/1/).
+
+```{r}
+# remotes::install_github("PMassicotte/gtrendsR")
+library(gtrendsR)
+library(skimr)
+last_christmas <- gtrends("Last Christmas", time = "today 3-m")$interest_over_time
+
+skim(last_christmas)
+```
+
+Lets try to plot the `hits` variable over time (`date`) using [ggplot2](https://ggplot2.tidyverse.org/).
+
+```{r}
+library(ggplot2)
+ggplot(last_christmas, aes(date, hits)) +
+  geom_point()
+```
+
+suppose we want to apply a rolling average to the hits variable.
+For this we will use the `slide()` function, you pass the object you want to iterate over and what to do it.
+Similar style to how we do it in **purrr**, notice how I specified `_dbl()` as I know the answer should be numeric.
+
+```{r}
+library(slide)
+slide_dbl(last_christmas$hits, ~mean(.x))
+```
+
+However, nothing actually happened in this example as the sliding window had length 1.
+Instead let's calculate the average of the last 5 days, or I other words: today + last 4 days.
+We do this by specifying `.before = 4`.
+
+```{r}
+slide_dbl(last_christmas$hits, mean, .before = 4)
+```
+
+Notice how the output has the same length as the input.
+This makes it easy to use inside other functions such as `mutate()`.
+
+Now let's calculate the moving average again and plot it on top of our plot.
+
+```{r, message=FALSE}
+library(dplyr)
+last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick")
+```
+
+Lastly, I would like to note that you can use arbitrary functions inside your `slide()`.
+Take a look at the additional resources for many more examples of what **slide** can do.
+
+## Additional resources
+
+- [Row-wise iteration with slide](https://davisvaughan.github.io/slide/articles/rowwise.html)
+- [Moving Averages and Calendars](https://www.youtube.com/watch?v=sbrhxvpP3iw)

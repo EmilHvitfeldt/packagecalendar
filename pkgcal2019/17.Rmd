@@ -1,0 +1,67 @@
+---
+slug: "17"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 17: golem
+
+Welcome back for the 17th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [golem](https://github.com/ThinkR-open/golem) package by [Colin Fay](https://twitter.com/_ColinFay).
+The **golem** package provides is an opinionated framework for building production-grade shiny applications.
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("golem")
+```
+
+This post is going to be quite different simply because it can be quite hard to illustrate shiny development in a short-form blog post.
+I'll instead provide a bunch of links to great resources that you can go to to learn how to use **golem**. This list is very similar to the one found on the package [website](https://thinkr-open.github.io/golem/index.html).
+
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/3-p9XLvoJV0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+- [Getting started with `golem`](https://thinkr-open.github.io/golem/articles/a_start.html)
+- [Building Big Shiny Apps - A Workflow - book](https://thinkr-open.github.io/building-shiny-apps-workflow/)
+- [Building Big Shiny Apps - A Workflow - blogpost](https://rtask.thinkr.fr/building-big-shiny-apps-a-workflow-1/)

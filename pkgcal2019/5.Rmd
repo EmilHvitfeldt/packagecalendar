@@ -1,0 +1,134 @@
+---
+slug: "5"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 5: ymlthis
+
+Welcome back for the 5th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+this time we will take a swing at something as wonderfully complicated as [YAML](https://yaml.org/).
+[Malcolm Barrett](https://twitter.com/malco_barrett) is trying to make that process easier with [ymlthis](https://github.com/r-lib/ymlthis).
+
+the package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("ymlthis")
+```
+
+when you normally create a new Rmarkdown document is comes prefilled with some examples and text.
+At the very beginning of the document you will typically find something that looks like:
+
+```{r, eval=FALSE}
+---
+title: "Elf Report"
+author: "Kris Kringle"
+date: "12/5/2019"
+output: html_document
+---
+```
+
+This is called YAML and helps you control document-wide "settings".
+With all the benefits of YAML, you still get some downsides. 
+3 of which are:
+
+- Indentation matters
+- No autocompletion in RStudio IDE
+- Fails silently
+
+And the 3rd one is what makes all of this a pain to work with.
+YAML will happily ignore what you did if you did 1 space instead of 2 spaces,
+all without telling you, leaving you scratching your head when you don't get what you want.
+
+This is where **ymlthis** comes in!
+You will be using `yml()` along with `yml_*()` functions to compose your YAML chunk.
+By loading the package and starting with `yml()` you get a basic function header.
+
+```{r, eval=FALSE}
+library(ymlthis)
+
+yml()
+```
+
+```{r, echo=FALSE}
+library(ymlthis)
+
+yml(author = FALSE, date = FALSE) %>%
+  yml_author("Kris Kringle") %>%
+  yml_date('`r format(Sys.Date())`')
+```
+
+The magic comes later once you start chaining on the `yml_*()` functions.
+
+```{r, eval=FALSE}
+yml() %>%
+  yml_title("Elf Report")
+```
+
+```{r, echo=FALSE}
+library(ymlthis)
+
+yml(author = FALSE, date = FALSE) %>%
+  yml_author("Kris Kringle") %>%
+  yml_date('`r format(Sys.Date())`') %>%
+  yml_title("Elf Report")
+```
+
+Here you get the full power of autocompletion since you just have to writ `yml_` and press tab you see the options you have.
+This is the workflow you will be using.
+No longer do you have to worry about misspellings or indentations!!!
+
+The package and its accompanying documentation include a lot of information about use cases and general YAML information. 
+Find more information in **Additional resources**.
+Before I sign off for today, I'll like to highlight that **ymlthis** comes with a [RStudio Addin](https://rstudio.github.io/rstudioaddins/) if you prefer a more GUI experience.
+
+![](https://camo.githubusercontent.com/3f260281a892d2ac28dfd5c51148f856a073b346/68747470733a2f2f692e696d6775722e636f6d2f426b7a477565472e676966)
+
+## Additional resources
+
+- [ymlthis - pkgdown site](https://ymlthis.r-lib.org/)
+- [An Introduction to ymlthis](https://ymlthis.r-lib.org/articles/introduction-to-ymlthis.html)
+- [YAML: an Overview](https://ymlthis.r-lib.org/articles/yaml-overview.html)
+- [The YAML Fieldguide](https://ymlthis.r-lib.org/articles/yaml-fieldguide.html)
+- [ymlthis talk - LA RUG](https://pensive-jackson-240dbf.netlify.com/#1)

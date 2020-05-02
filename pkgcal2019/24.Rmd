@@ -1,0 +1,69 @@
+---
+slug: "24"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 24: styler
+
+
+Welcome back for the 24th and final day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+we are going to end in style with  [styler](https://github.com/r-lib/styler) package by [Lorenz Walthert](https://twitter.com/lorenzwalthert) and [Kirill Müller](https://twitter.com/krlmlr).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("styler")
+```
+
+The goal of styler is to provide non-invasive pretty-printing of R source code while adhering to the [tidyverse](https://style.tidyverse.org/) formatting rules.
+
+The package contains a handful of functions that helps you style your code at different levels.
+These functions include `style_file()`, `style_dir()` and `style_pkg()` who will style files, directories and whole packages respectively.
+Additionally **styler** provides Rstudio Addins for quick access.
+
+![](https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif)
+
+Thank you very much for following me this year! 
+It was a blast and I look forward to doing it again next year!

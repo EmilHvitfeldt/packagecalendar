@@ -1,0 +1,122 @@
+---
+slug: "2"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 2: glue
+
+Welcome back for the second day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be talking about the little package called [glue](https://github.com/tidyverse/glue) package by [Jim Hester](https://twitter.com/jimhester_).
+
+the package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("glue")
+```
+
+**glue** provides a way to do simple string interpretation using a simple syntax.
+The user can pass expressions into the string to be evaluated.
+This approach will feel similar to `sprintf()` expect that `glue()` shows the location in place.
+Simply pass any expression into the string by wrapping it in curly brackets ({}).
+`glue()` will vectorize when needed.
+
+```{r}
+library(glue)
+
+color <- "red"
+glue("Santa packed a {color} present")
+
+color <- c("red", "blue", "green")
+glue("Santa packed a {color} present")
+```
+
+This is commonly done by passing in a defined variable outside `glue()`,
+but remember that any expression can be passed to `glue()`.
+
+```{r}
+glue("`mtcars` has {nrow(mtcars)} rows and {ncol(mtcars)} columns")
+```
+
+The curly brackets might be used for something else depending on what you are trying to do.
+In that case, you can use the arguments `.open` and `.close` to redefine the borders.
+
+```{r}
+n <- 1000000000 # number of children
+glue("Santa uses the formula $<<n>>^{magic + love}$ to determine how much sugar to give to the elfs.",
+     .open = "<<", .close = ">>")
+```
+
+There are many other use cases for glue, but I would like to highlight `glue_data()`.
+This function allows you to access variables inside a given data.frame,
+much the same way you can with many of the tidyverse packages.
+
+For this example, I have created a summarized dataset.
+
+```{r, message=FALSE}
+library(dplyr)
+mtcars_summarized <- mtcars %>%
+  group_by(cyl) %>%
+  summarise(n = n(),
+            min_wt = min(wt),
+            max_wt = max(wt)) %>%
+  mutate_all(round, digits = 2)
+```
+
+We can then use `glue_data()` to create a little summary in text
+
+```{r, results='hold'}
+cat("`mtcars` has\n")
+glue_data(mtcars_summarized,
+          "{n} cars with {cyl} cylinders, with a weight range of {min_wt*1000}-{max_wt*1000} lbs")
+```
+
+This is all I have for today! 
+Stay happy and I look forward to seeing you back tomorrow!
+
+## Additional resources
+
+- [glue 1.2.0](https://www.tidyverse.org/blog/2017/10/glue-1.2.0/)
+- [Glue magic Part I](https://www.njtierney.com/post/2019/07/07/glue-magic-p1/)
+- [Glue strings to data in R](https://www.youtube.com/watch?v=XQmBcpQl8K8)

@@ -1,0 +1,92 @@
+---
+slug: "21"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 21: devout
+
+Welcome back for the 21st day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [devout](https://github.com/coolbutuseless/devout) package by [mikefc](https://twitter.com/coolbutuseless).
+The **devout** package gives you a way to write R graphics output devices in plain R.
+
+The package is not yet available from CRAN but can be downloaded with
+
+```{r, eval=FALSE}
+remotes::install_github("coolbutuseless/devout")
+```
+
+For the following examples, we will use the "Last Christmas" data from earlier posts.
+
+```{r}
+# remotes::install_github("PMassicotte/gtrendsR")
+library(gtrendsR)
+last_christmas <- gtrends("Last Christmas", time = "today 3-m")$interest_over_time
+```
+
+And we will be building off the chart we created back in [day 11](https://www.hvitfeldt.me/pkgcal2019/11/)
+
+```{r, message=FALSE}
+library(ggplot2)
+library(slide)
+library(dplyr)
+p <- last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick")
+p
+```
+
+The **devout** package is simply delightful as it allows us to change the graphical output to anything we want.
+It comes with the way to set the graphical engine to ascii using the `ascii()` function.
+
+```{r}
+library(devout)
+ascii(width = 100)
+p
+invisible(dev.off())
+```
+
+There are many other use-cases some of which can be found [here](https://coolbutuseless.github.io/2019/10/08/the-devoutverse-a-collection-of-non-standard-graphics-output-devices-for-rstats/).

@@ -1,0 +1,88 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0px 40px 100px 40px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-family: Montserrat;
+    line-height: 1.7;
+}
+
+a {
+  color: #b72c2f;
+}
+
+code {
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #e8c874;
+}
+
+
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #9f7234;
+}
+
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #e8c874;
+}
+
+.hljs-attribute {
+  color: #da473d;
+}
+
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #da473d;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #5c682b;
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #5c682b;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d;
+  color: #cccccc;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

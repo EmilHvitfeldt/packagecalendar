@@ -1,0 +1,96 @@
+---
+slug: "20"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 20: rayrender
+
+Welcome back for the 20th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [rayrender](https://github.com/tylermorganwall/rayrender) package by [Tyler Morgan-Wall](https://twitter.com/tylermorganwall).
+The **rayrender** package provides a raytracer written in R.
+
+The package is not yet available from CRAN but can be downloaded with
+
+```{r, eval=FALSE}
+remotes::install_github("tylermorganwall/rayrender")
+```
+
+The package [website](http://www.rayrender.net/) provides many cool examples you should look at.
+
+For this post, I'm gonna do something simple. I'll try to generate a scene with a single Christmas tree.
+
+The data object used in this example is downloaded from [here](https://free3d.com/3d-model/christmas-tree-891764.html).
+
+We start by generating a ground using the `generate_ground()`, this will create a specification and not render directly yet.
+
+```{r}
+library(rayrender)
+generate_ground()
+```
+
+Next, we add the Christmas tree.
+This is done using the `add_object()` function along with the `obj_model()` function inport the .obj file.
+For this, I decide to have the tree be made of green metal.
+Notice again how we just get a data.frame back with a specification.
+
+```{r}
+generate_ground() %>%
+  add_object(obj_model(filename = "~/Downloads/55-ct/Christmas Tree.obj", 
+                       scale_obj = 0.5,
+                       material = metal(color = "green")))
+```
+
+Lastly, we pass all of that into `render_scene()` where I have changed the `lookfrom` to zoom out a little bit.
+
+```{r}
+generate_ground() %>%
+  add_object(obj_model(filename = "~/Downloads/55-ct/Christmas Tree.obj", 
+                       scale_obj = 0.5,
+                       material = metal(color = "green"))) %>%
+  render_scene(lookfrom = c(0,10,100))
+```
+
+And there we have it! A beautiful Christmas tree!
+

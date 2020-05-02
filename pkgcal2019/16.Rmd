@@ -1,0 +1,126 @@
+---
+slug: "16"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 16: Sparkline
+
+Welcome back for the 16th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [sparkline](https://github.com/htmlwidgets/sparkline) package by [Kent Russell](https://twitter.com/timelyportfolio).
+The **sparkline** package provides a wrapper around the jQuery library [of the same name](https://omnipotent.net/jquery.sparkline/#s-about).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("Sparkline")
+```
+
+This package is quite similar to the [datalegreyar](https://github.com/emitanaka/datalegreyar) package from [day 1](https://www.hvitfeldt.me/pkgcal2019/1/).
+
+**sparkline** will take a series of numbers and create a miniature chart from them.
+Here we will reuse data from [day 13](https://www.hvitfeldt.me/pkgcal2019/1/)
+
+```{r, echo=FALSE}
+carrols <- c("O Holy Night", "Silent Night", 
+             "O Come All Ye Faithful")
+
+library(gtrendsR)
+carrol_trends <- gtrends(carrols)$interest_over_time
+```
+
+First, let's pull out a single time-series using [dplyr](https://dplyr.tidyverse.org/).
+
+```{r, message=FALSE}
+library(dplyr)
+holy_nights_hits <- carrol_trends %>%
+  filter(keyword == "O Holy Night") %>%
+  mutate(hits = as.numeric(if_else(hits == "<1", "0", hits))) %>%
+  pull(hits)
+```
+
+Then we simply pass the vector to the `sparkline()` function.
+
+```{r, eval=FALSE}
+library(sparkline)
+sparkline(holy_nights_hits)
+```
+
+```{r, echo=FALSE}
+library(sparkline)
+sparkline(holy_nights_hits, width = "100%", height = 60)
+```
+
+What makes **sparkline**s really special is the ability for you to embed them in other applications.
+In the following example, we group the data by keyword and year. 
+Then we have a sparkline for each year inside our table.
+
+```{css}
+.ReactTable {
+  background: #2f3238;
+}
+```
+
+```{r}
+library(reactable)
+library(dplyr)
+library(sparkline)
+library(lubridate)
+
+data <- carrol_trends %>%
+  mutate(hits = as.numeric(if_else(hits == "<1", "0", hits)),
+         year = year(date)) %>%
+  filter(year > 2014) %>%
+  group_by(keyword, year) %>%
+  summarise(hits = list(hits))
+
+reactable(data, columns = list(
+  hits = colDef(cell = function(values) {
+    sparkline(values)
+  })
+))
+```
+
+This is all for today. **sparkline** is highly customizable and can be used in many applications.
+

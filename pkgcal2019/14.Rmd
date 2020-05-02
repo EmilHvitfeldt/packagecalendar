@@ -1,0 +1,99 @@
+---
+slug: "14"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 14: networkdata
+
+Welcome back for the 14th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [networkdata](https://github.com/schochastics/networkdata) package by [David Schoch](https://twitter.com/schochastics).
+The **networkdata** package provides over 2000 networks from almost 1000 datasets at the time of writing.
+
+The package is not yet available from CRAN but can be downloaded with
+
+```{r, eval=FALSE}
+remotes::install_github("schochastics/networkdata")
+```
+
+The package itself is fairly straightforward. All the datasets come in `igraph` format.
+All the datasets along with metadata can be seen using the `show_networks()` function
+
+```{css, echo=FALSE}
+.ReactTable {
+  background: #2f3238;
+}
+```
+
+```{r}
+library(networkdata)
+library(reactable)
+reactable(show_networks())
+```
+
+the dataset `movie_751` contains the interactions of characters in the movie ["White Christmas" (1954)](https://www.imdb.com/title/tt0047673).
+
+We can use the [ggraph](https://ggraph.data-imaginist.com/) package to plot the network
+
+```{r, eval=FALSE}
+library(ggraph)
+ggraph(movie_751, layout = "circle") +
+  geom_edge_link(aes(alpha = weight), color = "firebrick") +
+  geom_node_label(aes(label = name)) + 
+  theme(
+    legend.position = "none"
+  )
+```
+
+```{r, echo=FALSE}
+library(ggraph)
+ggraph(movie_751, layout = "circle") +
+  geom_edge_link(aes(alpha = weight), color = "firebrick") +
+  geom_node_label(aes(label = name)) + 
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "#2f3238"),
+    plot.background = element_rect(fill = "#2f3238", color = NA)
+    )
+```

@@ -1,0 +1,201 @@
+---
+output: 
+  html_document:
+    css: "../../calendar.css"
+showonlyimage: false
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE)
+library(htmltools)
+```
+
+```{r}
+library(htmltools)
+```
+
+# 2019 Package Calendar
+
+```{r}
+library(particlesjs) 
+library(magrittr)
+
+particles_config(particles.number.value = 100, particles.color.value = "#FFF", particles.opacity.random = TRUE, particles.size.value = 10, particles.line_linked.enable = FALSE, particles.move.direction = "bottom", particles.move.speed = 1, interactivity.events.onclick.enable = FALSE, interactivity.events.onhover.enable = FALSE) %>% 
+  particles()
+```
+
+```{r, echo = FALSE}
+r_green <- function() {
+  cols <- prismatic::color(c(
+    "#004000",
+    "#004800",
+    "#005000",
+    "#005800",
+    "#006000",
+    "#006800",
+    "#007000",
+    "#007800",
+    "#008000",
+    "#008800"
+))
+  sample(cols, 1)
+}
+
+r_red <- function() {
+  cols <- prismatic::color(c(
+    "#960000",
+    "#B41D01",
+    "#C21F1F",
+    "#8C0E0E",
+    "#F21313"
+))
+  sample(cols, 1)
+
+}
+
+r_gold <- function() {
+    cols <- prismatic::color(c(
+    "#FFCB17",
+    "#FCB600",
+    "#ad652c",
+    "#eeb761"
+))
+  sample(cols, 1)
+}
+
+r_background <- function() {
+    cols <- prismatic::color(c(
+    "#F5F5DC",
+    "#FAF0E6",
+    "#FAFAE6",
+    "#FAF0E6",
+    "#FFFFFF"
+))
+  sample(cols, 1)
+}
+
+cross_stitch <- function(background, color1, color2, width1 = 20, width2 = 20) {
+  glue::glue("
+  background-color: {background};
+  background-image:
+	repeating-linear-gradient(
+		-45deg,
+		transparent,
+		transparent {width1}px,
+		{color1()} 0,
+		{color1()} {sample(39:41, 1)}px
+	),
+	repeating-linear-gradient(
+		45deg,
+		transparent,
+		transparent {width2}px,
+		{color2()} 0,
+		{color2()} {sample(39:41, 1)}px
+	);
+  background-blend-mode: multiply;
+            ") 
+}
+
+circle_stitch <- function(background, color1, color2, width1 = 20, width2 = 20) {
+  glue::glue("
+  background:
+    radial-gradient(
+      transparent 0,
+      transparent 20px,
+      {color1()} 20px,
+      {color1()} 25px,
+      transparent 25px,
+      transparent 100%
+    ),
+    radial-gradient(
+      transparent 0,
+      transparent 20px,
+      {color1()} 20px,
+      {color1()} 25px,
+      transparent 25px,
+      transparent 100%
+    ),
+    radial-gradient(
+      transparent 0,
+      transparent 20px,
+      {color2()} 20px,
+      {color2()} 25px,
+      transparent 25px,
+      transparent 100%
+    ),
+    radial-gradient(
+      transparent 0,
+      transparent 20px,
+      {color2()} 20px,
+      {color2()} 25px,
+      transparent 25px,
+      transparent 100%
+    ), {background};
+
+    background-blend-mode: multiply;
+  background-size: 5em 5em;
+  background-position:
+    40px 40px,
+    40px 0,
+    0 0,
+    0 40px;
+  background-blend-mode: multiply;    
+            ") 
+}
+
+skew_stitch <- function(background, color1, color2, width1 = 20, width2 = 20) {
+    glue::glue("
+  background:
+	repeating-linear-gradient(
+		to top {sample(c('left', 'right'), 1)},
+		{r_background()} 0,
+		{r_background()} 20px,
+		transparent 20px,
+		transparent 40px,
+		{r_green()} 40px,
+		{r_green()} 60px
+	),
+	repeating-linear-gradient(
+		to left,
+		{r_red()} 0,
+		{r_red()} 20px,
+		{r_background()} 20px,
+		{r_background()} 40px,
+		{r_green()} 40px,
+		{r_green()} 60px
+	), {r_gold()};
+  
+  background-blend-mode: multiply;
+  ")
+}
+
+```
+
+
+```{r, echo=FALSE, message=FALSE}
+library(lubridate)
+make_package <- function(x) {
+  main_colors <- sample(list(r_green, r_red), 2)
+  stitch <- sample(list(cross_stitch, circle_stitch, skew_stitch))[[1]]
+  
+  tags$a(href = paste0("../../pkgcal2019/", x, ".html"),
+         style = "text-decoration: none;",
+  div(class = "item",
+      div(class = "circle", x),
+      style = paste("width: 150px; height: 150px;", 
+                    stitch(r_background(), main_colors[[1]], main_colors[[2]], 30, 30))
+  ) 
+  )
+}
+```
+
+```{r, echo=FALSE}
+set.seed(1234)
+div(class = "items",
+  purrr::map(1:24, ~ make_package(.x))
+)
+```
+

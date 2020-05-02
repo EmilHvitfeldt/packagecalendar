@@ -1,0 +1,80 @@
+---
+slug: "9"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 9: gapminder
+
+Welcome back for the 9th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will switch it up a little and talk about a great data package.
+The package of the day is [gapminder](https://github.com/jennybc/gapminder) created by [Jenny Bryan](https://twitter.com/JennyBryan).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("gapminder")
+```
+
+First a little background.
+The [Gapminder Foundation](https://www.gapminder.org/) was created by [Ola Rosling](https://en.wikipedia.org/wiki/Ola_Rosling), [Anna Rosling Rönnlund](https://en.wikipedia.org/wiki/Anna_Rosling_R%C3%B6nnlund) and [Hans Rosling](https://en.wikipedia.org/wiki/Hans_Rosling) to promote "sustainable global development and achievement of the United Nations Millennium Development Goals by increased use and understanding of statistics and other information about social, economic and environmental development at local, national and global levels." (quote straight from Wikipedia)
+
+The package includes a dataset with various socioeconomic factors.
+The data has been studied far and wide and serves as a great starting point for data wrangling and visualization.
+Both for your own #rstats journey but also if you are planning on teaching others.
+**gapminder** is a great starting dataset with a low barrier to entry for understanding,
+but a high ceiling for insights!
+
+We can take a look at the dataset by loading the package and simply calling `gapminder`.
+
+```{r}
+library(gapminder)
+head(gapminder)
+```
+
+We have information about life expectancy(lifeExp), population(pop) and Per-capita Gross domestic product(gdpPercap) for each country with a 5-year timestep.
+It is important to note that the package isn't getting updated with newer data.
+So if you need these statistics for reasons other then teaching and examples people use other data sources.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jbkSRLYSojo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

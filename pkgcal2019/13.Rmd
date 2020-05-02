@@ -1,0 +1,128 @@
+---
+slug: "13"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 13: gtrendsR
+
+Welcome back for the 13th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [gtrendsR](https://github.com/PMassicotte/gtrendsR) by [Philippe Massicotte](https://twitter.com/philmassicotte).
+The **gtrendsR** package provides an interface for retrieving and displaying [Google Trends](https://trends.google.com/) information.
+
+The package is available from CRAN, but due to recent changes to Google Trends API, 
+the CRAN version of the package is no longer working. 
+If you want to continue to query Google Trends, you have to install the development version of the package
+
+```{r, eval=FALSE}
+remotes::install_github("PMassicotte/gtrendsR")
+```
+
+We have already seen the use of **gtrendsR** in previous posts.
+The main function is `gtrends()` which contains a handful of parameters.
+The main arguments are `keyword` and `time` for our purposes.
+`keyword` is a character vector of the search terms you want to get the trend for.
+`time` is a string specifying the span of the query, examples are 
+
+- `"now 1-H"` - last hour
+- `"now 4-d"` - last 4 days
+- `"today 2-m"` - past 2 months
+- `Y-m-d Y-m-d` - Time span between two dates (ex.: "2010-01-01 2010-04-03")
+
+Let's use the carrol names we found [yesterday](https://www.hvitfeldt.me/pkgcal2019/12/),
+note how we are not able to pass more than 5 keywords to `gtrends()`.
+
+```{r, echo=FALSE}
+carrols <- c("O Holy Night", "Silent Night", 
+             "Hark! The Herald Angels Sing", "O Come All Ye Faithful", 
+             "Jesus Christ the Apple Tree")
+```
+
+```{r}
+library(gtrendsR)
+carrol_trends <- gtrends(carrols)
+```
+
+After pulling the information we get quite a lot of information back
+
+```{r}
+names(carrol_trends)
+```
+
+Lets first look at the interest over time
+
+```{r}
+head(carrol_trends$interest_over_time)
+```
+
+here we get hits as a `character` since some of the entries are `<1`.
+Let's correct that and plot the values over time by keyword
+
+```{r, message=FALSE}
+library(tidyverse)
+
+carrol_trends$interest_over_time %>%
+  mutate(hits = as.numeric(if_else(hits == "<1", "0", hits))) %>%
+  ggplot(aes(date, hits, color = keyword)) +
+  geom_line()
+```
+
+Note how the maximal value is 100 and every other value is proportional to that value.
+Which is why we see some of the values being 0 since they appeared less than 1% of the times as the maximum.
+
+We can also take a look at the related queries.
+Here I have shown them using the [reactable](https://glin.github.io/reactable/) package.
+
+```{css}
+.ReactTable {
+  background: #2f3238;
+}
+```
+
+```{r}
+library(reactable)
+reactable(carrol_trends$related_queries)
+```
+
+There are many more things we can look at, but this is all I have for you today!

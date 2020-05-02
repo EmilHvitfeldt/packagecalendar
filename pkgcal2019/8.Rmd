@@ -1,0 +1,136 @@
+---
+slug: "8"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 8: globe4r
+
+Welcome back for the 8th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+The package of the day is [globe4r](https://github.com/JohnCoene/globe4r) created by [John (JP) Coene](https://twitter.com/jdatap).
+The **globe4r** package wraps the [globe.gl](https://github.com/vasturiano/globe.gl) library.
+
+The package is not yet on CRAN and can be downloaded from Github with
+
+```{r, eval=FALSE}
+remotes::install_github("JohnCoene/globe4r")
+```
+
+The package is wonderfully simple. Simply start by calling `create_globe()`.
+This will create a blank canvas with a globe on it.
+
+```{r, eval=FALSE}
+library(globe4r)
+create_globe()
+```
+
+```{r, message=FALSE, echo=FALSE}
+library(globe4r)
+create_globe() %>%
+  globe_background(color = "#2f3238")
+```
+it is interactive so you can zoom and drag as you wish.
+
+Let's play around a little bit and load in some population data.
+Population data is very important for Santa when we need to plan his route.
+
+```{r}
+data("population") # comes with globe4r
+```
+
+Let's take our globe we created with `create_globe()` and add some bars.
+This is done in much the same way as in **ggplot2**.
+
+```{r, eval=FALSE}
+create_globe() %>%
+  globe_bars(
+    coords(lat, lon, altitude = value),
+    data = population
+  ) %>% 
+  scale_bars_altitude(max = 0.4)
+```
+
+```{r, message=FALSE, echo=FALSE}
+create_globe() %>%
+  globe_bars(
+    coords(lat, lon, altitude = value),
+    data = population
+  ) %>% 
+  scale_bars_altitude(max = 0.4) %>%
+  globe_background(color = "#2f3238")
+```
+
+It looks very nice! let's just give it a little more of a blueish color. 
+Luckily that is the default colors for **globe4r** so we just follow in the footsteps of before to add a color aesthetic.
+
+```{r, eval=FALSE}
+create_globe() %>%
+  globe_bars(
+    coords(lat, lon, altitude = value, color = value),
+    data = population
+  ) %>% 
+  scale_bars_altitude(max = 0.4) %>% 
+  scale_bars_color()
+```
+
+```{r, message=FALSE, echo=FALSE}
+create_globe() %>%
+  globe_bars(
+    coords(lat, lon, altitude = value, color = value),
+    data = population
+  ) %>% 
+  scale_bars_altitude(max = 0.4) %>% 
+  scale_bars_color() %>%
+  globe_background(color = "#2f3238")
+```
+
+There are many more things you can do with **globe4r**! Please visit the [website](https://globe4r.john-coene.com/) and the original [library](https://github.com/vasturiano/globe.gl) for more inspiration.
+
+<details>
+ <summary>Setting background color</summary>
+
+`create_globe()` will by default use a black background color.
+I have secretly used `globe_background(color = "#2f3238")` to set the background color equal to the page background color.
+
+</details>

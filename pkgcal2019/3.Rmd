@@ -1,0 +1,140 @@
+---
+slug: "3"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 3: details
+
+Welcome back for the 3rd day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be talking about another little nifty package called [details](https://github.com/yonicd/details) package by [Jonathan Sidi](https://twitter.com/yoniceedee).
+
+the package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("details")
+```
+
+Suppose you want to hide some information in your html document,
+while still allowing the user to see it if they want to. 
+In plain html something like that would normally be done using the `details` tag.
+
+```{r, eval=FALSE}
+<details>
+ <summary>Secret list of names</summary>
+ Aura
+ Dona
+ Danyelle
+ Maribel
+ Evonne
+ Elly
+ Joye
+ Monet
+ Donny
+ Georgeanna
+</details>
+```
+
+Which would result in something like this:
+
+```{r, echo=FALSE}
+library(details)
+
+secret <- "Aura\nDona\nDanyelle\nMaribel\nEvonne\nElly\nJoye\nMonet\nDonny\nGeorgeanna"
+
+details(secret, "Secret list of names")
+```
+
+Putting R objects or output into a details tag used to be quite frustrating. 
+Presenting **details**! 
+Now all you have to do is pass (piping works too) what you want hidden into `details()`.
+
+```{r}
+library(details)
+library(magrittr)
+
+secret <- c("Madeline", "Tom", "Shavon", "Krystyna", "Callie",
+            "Damon", "Shellie", "Bebe", "Candis", "Laure")
+
+details(secret)
+```
+
+This has a few obvious use cases such as hiding session information
+
+```{r}
+sessioninfo::session_info() %>%
+  details::details(summary = 'current session info')
+```
+
+and hiding spicy plots
+
+```{r}
+details(plot(sin, xlim = c(0, 20)), "my curvy plot")
+```
+
+I leave you with a little present :)
+
+```{r, message=FALSE, echo=FALSE}
+library(tidyverse)
+symbols <- c('.', '~', "'", 'O', "'", '~', '.')
+layer_size <- seq(3, 45, by = 4)
+
+things <- rep(symbols, length.out = sum(layer_size))
+
+rows <- split(things, rep(seq_along(layer_size), times = layer_size)) %>%
+  sapply(paste0, collapse = "")
+
+details(summary = "Open for a special presents",
+tibble(x = 0, 
+       y = -as.numeric(names(rows)),
+       labels = rows) %>%
+  ggplot(aes(x, y, label = labels)) +
+  geom_text(size = 10) +
+  theme_void()
+)
+```
+
+## Additional resources
+
+- [Vignettes](https://yonicd.github.io/details/articles/index.html)

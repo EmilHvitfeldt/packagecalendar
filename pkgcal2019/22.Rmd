@@ -1,0 +1,129 @@
+---
+slug: "22"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 22: highcharter
+
+```{css, echo=FALSE}
+tspan {
+  fill: #F5F5F5;
+}
+```
+
+
+Welcome back for the 22nd day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [highcharter](https://github.com/jbkunst/highcharter) package by [Joshua Kunst](https://twitter.com/jbkunst).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("highcharter")
+```
+
+For the following examples, we will be using the `elf` dataset from earlier posts.
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+set.seed(1234) 
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly")))
+```
+
+**highcharter** is a wrapper around the javascript library [highcharts](http://highcharts.com/) which allows you to create wonderful interactive charts.
+
+**highcharter** lets you use a couple of different syntaxes. 
+For now, I'll showcase how to use the `hchart()` function.
+It has roughly the same interface as [ggplot2](https://ggplot2.tidyverse.org/).
+
+```{r, message=FALSE}
+library(highcharter)
+
+hchart(elf, "scatter", hcaes(x = `Sugar Consumption`, y = `Jolliness`, group = Elf))
+```
+
+Clicking on the legends will disable the points on the chart. 
+Try it out for yourself.
+
+Additions to this plot are handled by piping on other functions.
+Let's propose we want to change the colors, we use the ` hc_colors()` function
+
+```{r}
+hchart(elf, "scatter", hcaes(x = `Sugar Consumption`, y = `Jolliness`, group = Elf)) %>%
+  hc_colors(c("#9F7234", "#DA473D", "#5AA340"))
+```
+
+```{r}
+hchart(elf, "scatter", hcaes(x = `Sugar Consumption`, y = `Jolliness`, group = Elf)) %>%
+  hc_colors(c("#9F7234", "#DA473D", "#5AA340")) %>%
+  hc_title(text = "Buddy The Not So Jolly Elf")
+```
+
+Please check out the package [website](http://jkunst.com/highcharter/index.html) for many more examples.
+
+<details>
+ <summary>Creating `elf` dataset</summary>
+
+```{r}
+library(tidyverse)
+set.seed(1234)
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly"))) %>%
+  mutate_if(is.numeric, jitter)
+```
+
+</details>

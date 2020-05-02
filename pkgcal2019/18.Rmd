@@ -1,0 +1,67 @@
+---
+slug: "18"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 18: flexdashboard
+
+Welcome back for the 18th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [flexdashboard](https://github.com/rstudio/flexdashboard).
+The **flexdashboard** package helps you create interactive dashboards for R.
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("flexdashboard")
+```
+
+Today's post is going to resemble yesterday's post in the sense that there won't be much code.
+
+**flexdashboard** gives you the power to create nice interactive dashboards.
+A great first place to start learning is directly on the package [website](https://rmarkdown.rstudio.com/flexdashboard/using.html).
+The page includes information regarding [layout](https://rmarkdown.rstudio.com/flexdashboard/using.html#layout), [sizing](https://rmarkdown.rstudio.com/flexdashboard/using.html#sizing), [storyboards](https://rmarkdown.rstudio.com/flexdashboard/using.html#storyboards) and much [more](https://rmarkdown.rstudio.com/flexdashboard/using.html#learning_more).
+
+If you are looking for inspiration taking a look at the [gallary](https://rmarkdown.rstudio.com/flexdashboard/examples.html) is well worth it.
+Another great resource is a [post](https://p8105.com/plotly_and_dashboards.html) by the [Fall of 2018 through the Biostatistics Department at the Columbia School of Public Health](https://p8105.com/index.html).

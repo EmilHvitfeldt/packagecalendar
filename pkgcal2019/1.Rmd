@@ -1,0 +1,145 @@
+---
+slug: "1"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 1: `r datalegreyar::fig(datalegreyar::datafy(4 + 3 * 1:20, "datalegreyar"), size = 64)`
+
+Welcome all to the first day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today I'm going to start simple and awesome with the [datalegreyar](https://github.com/emitanaka/datalegreyar) package by [Emi Tanaka](https://twitter.com/statsgen). 
+The package provides an interface to the font [datalagreya](https://github.com/figs-lab/datalegreya) developed by [Figs](https://www.figs-lab.com/).
+
+Since the package still is on GitHub you need to download it from there
+
+```{r, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github('emitanaka/datalegreyar')
+```
+
+A datalegreyar composition requires two main parts. 
+The text and the underlying data used to create the line. 
+Where I'm living, Christmas music has been playing for quite a while, 
+with "Last Christmas" being quite a popular choice. 
+We can use the [gtrendsR](https://github.com/PMassicotte/gtrendsR) to retrieve the hit data from the last 3 months.
+Please note that the CRAN version of **gtrendsR** isn't working well, 
+download the developmental version from GitHub if you want to follow along.
+
+```{r}
+# remotes::install_github("PMassicotte/gtrendsR")
+library(gtrendsR)
+last_christmas <- gtrends("Last Christmas", time = "today 3-m")
+```
+
+Then we load the **datalegreyar** package and use the `datafy()` function to combine the values and the text. 
+Furthermore, we also specify that we would want to ignore the spaces so we have one continuous line.
+
+```{r}
+library(datalegreyar)
+last_christmas_data <- datafy(
+  values = last_christmas$interest_over_time$hits,
+  text = "Last Christmas",
+  ignore_space = FALSE
+)
+
+last_christmas_data
+```
+
+Next, we pass the datafied object to `fig()` to render it in our document. 
+I have manually set size to 60 as the default is quite small.
+
+```{r}
+fig(last_christmas_data, size = 60)
+```
+
+From here on we can add our final stylistic choice. 
+There are simple self-explanatory arguments such as `color` and `bgcolor`(background color).
+One of the prominent is the `type` argument which specifies the area under the curve.
+
+```{r}
+fig(last_christmas_data, size = 60, type = "thin")
+fig(last_christmas_data, size = 60, type = "gradient")
+fig(last_christmas_data, size = 60, type = "dot")
+```
+
+I like the gradient type so I'll stick with that one for now.
+Last we will use the `xlabs` argument to add little text above the datalegreyar.
+I'll use the opportunity to label the start and endpoints for dates.
+
+```{r}
+fig(last_christmas_data, size = 60, type = "gradient", 
+    xlabs = c("sep 1", "dec 1"))
+```
+
+## Santa's little datalegreyar factory
+
+I already decided on a style I like, so I'm going to wrap up everything into a function and pass in a bunch of Christmas Song titles.
+
+```{r}
+datalegreyar_factory <- function(text, size) {
+  data <- datafy(
+    values = gtrends(text, time = "today 3-m")$interest_over_time$hits,
+    text = text,
+    ignore_space = FALSE
+  )
+  fig(data, size = size, type = "gradient", xlabs = c("sep 1", "dec 1"))
+}
+```
+
+Then we just apply it many times and see the magic! 
+This is all for today, keep an eye out for the next opening tomorrow!
+
+```{r}
+datalegreyar_factory("Drummer Boy", size = 60) 
+```
+
+
+```{r}
+datalegreyar_factory("White Christmas", size = 50) 
+```
+
+
+```{r}
+datalegreyar_factory("We Wish You A Mary Christmas", size = 30) 
+```

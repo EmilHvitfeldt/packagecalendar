@@ -1,0 +1,11 @@
+base
+knitr
+htmltools
+networkdata
+reactable
+ggplot2
+ggraph
+gtrendsR
+slide
+dplyr
+ggtext

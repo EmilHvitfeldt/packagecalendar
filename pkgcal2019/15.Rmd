@@ -1,0 +1,84 @@
+---
+slug: "15"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 15: covr
+
+Welcome back for the 15th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [covr](https://github.com/r-lib/covr) package by [Jim Hester](https://twitter.com/jimhester_).
+The **covr** package helps you track test coverage for your R packages.
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("covr")
+```
+
+once you start developing packages you get to a point where you start thinking about implementing [unit tests](http://r-pkgs.had.co.nz/tests.html).
+**covr** helps you keep track of which parts of the code have had tests done on them.
+Setting up **covr** is really easy to set up if you use the [usethis](https://usethis.r-lib.org/) package.
+You simply run the following command and follow the instructions.
+
+```{r, eval=FALSE}
+usethis::use_coverage()
+```
+
+for local usage you can use the `package_coverage()` to get a printout of your coverage.
+For this example, I have cheated a little bit to showcase the result for my [prismatic](https://github.com/EmilHvitfeldt/prismatic) package.
+
+```{r, eval=FALSE}
+library(covr)
+package_coverage()
+```
+
+```{r, echo=FALSE}
+library(covr)
+package_coverage("~/Github/prismatic/")
+```
+
+The `report()` function will run `package_coverage()` in the background and will return an interactive table so you can see which lines have been tested.
+
+That is everything I have for today, I look forward to seeing you again tomorrow!

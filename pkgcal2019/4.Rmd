@@ -1,0 +1,128 @@
+---
+slug: "4"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 4: carbonate
+
+Welcome back for the 4th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will revisit [Jonathan Sidi](https://twitter.com/yoniceedee)'s creations by looking at [carbonate](https://github.com/yonicd/carbonate). The package is a nice way of interacting with [carbon.js](https://carbon.now.sh/about).
+
+the package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("carbonate")
+```
+
+The **carbonate** package uses the [R6]() classes which is why the syntax might look a little different then what you are used to.
+
+```{r}
+library(carbonate)
+```
+
+The default behavior is to take the code you have in your clipboard. 
+Here we create an object `x` with the code used to display yesterday's secret.
+
+```{r, eval=FALSE}
+x <- carbon$new()
+```
+
+```{r echo=FALSE}
+text <- c(
+  "library(tidyverse)", 
+  "symbols <- c('.', '~', \"'\", 'O', \"'\", '~', '.')", 
+  "layer_size <- seq(3, 45, by = 4)", 
+  "", 
+  "things <- rep(symbols, length.out = sum(layer_size))", 
+  "", 
+  "rows <- split(things, rep(seq_along(layer_size), times = layer_size)) %>%", 
+  "  sapply(paste0, collapse = \"\")", 
+  "", 
+  "details(summary = \"Open for a special presents\",", 
+  "        tibble(x = 0, ", 
+  "               y = -as.numeric(names(rows)),", 
+  "               labels = rows) %>%", 
+  "          ggplot(aes(x, y, label = labels)) +", 
+  "          geom_text(size = 10) +", 
+  "          theme_void()", 
+  ")")
+
+x <- carbon$new(text)
+```
+
+We can take a look at the code with 
+
+```{r}
+x$code
+```
+
+If you want the carbon output you have two ways to go
+
+## Browse
+
+calling the `browse()` method takes you to [carbon.now.sh](https://carbon.now.sh/) with your code and configurations already there. 
+From there you can play more with the configurations or simply press **export** to download your image.
+
+```{r, eval=FALSE}
+x$browse()
+```
+
+## RSelenium
+
+If you have [RSelenium](https://ropensci.github.io/RSelenium/) installed you can create the image without leaving R.
+You just set the download path and run the `carbonate()` method.
+
+```{r, eval=FALSE}
+x$download_path <- file.path("~/Desktop/")
+x$carbonate(file = 'myfile.png')
+```
+
+No matter what you choose you will end up with something like this:
+
+![](https://i.imgur.com/YTMP1t6.png)
+
+There is a ton of [options](https://yonicd.github.io/carbonate/#manipulate-carbon-object) to manipulate. 
+So go wild and make it your own!
+See you next time!

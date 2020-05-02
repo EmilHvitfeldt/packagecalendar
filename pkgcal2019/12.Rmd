@@ -1,0 +1,84 @@
+---
+slug: "12"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 12: polite
+
+Welcome back for the 12th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [polite](https://github.com/dmi3kno/polite) by [Dmytro Perepolkin](https://twitter.com/dmi3k).
+The **polite** package helps you be considerate when scraping the web.
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("polite")
+```
+
+The main functions for this package is `bow()` and `scrape()`.
+First to call `bow()` on the website you intend to scrape.
+This will set up a session with permission, set up a connection and establish settings.
+
+```{r}
+library(polite)
+
+session <- bow("https://www.classicfm.com/discover-music/occasions/christmas/nations-top-30-christmas-carols/")
+session
+```
+
+We can then use `scrape()` to the HTML object that we can investigate with [rvest](https://rvest.tidyverse.org/).
+
+```{r}
+library(rvest)
+scrape(session) %>%
+  html_nodes("h2") %>%
+  html_text()
+```
+
+There are more examples of the package [website](https://dmi3kno.github.io/polite/) of expended examples.
+
+## Additional resources
+
+- [Presentation of {polite} at UseR'19 in Toulouse (11 July 2019)](https://github.com/dmi3kno/user19-polite)

@@ -1,0 +1,107 @@
+---
+slug: "6"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 6: skimr
+
+Welcome back for the 6th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+When you get a new dataset it is important to do some exploratory data analysis.
+One of my first tools I reach at is the [skimr](https://github.com/ropensci/skimr) package by [rOpenSci](https://twitter.com/rOpenSci). 
+
+the package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("skimr")
+```
+
+To illustrate the package we will be using the festive dataset on [Billboard Top 100 Christmas Carol Dataset](https://www.kaggle.com/sharkbait1223/billboard-top-100-christmas-carol-dataset/data).
+
+```{r}
+billboards <- read.csv("~/Downloads/christmas_billboard_data.csv")
+```
+
+Traditionally I would have simply printed the data.frame
+
+```{r, eval=FALSE}
+billboards
+```
+
+```{r, echo=FALSE}
+head(billboards)
+```
+
+used `summary()`
+
+```{r}
+summary(billboards)
+```
+
+or used the structure function `str()`
+
+```{r}
+str(billboards)
+```
+
+while they all give good information they all lack in one way or another,
+and I tend to go back and forth between the different functions.
+Introducing **skimr**, the main function `skim()` gives a nice overview of the data.
+Complete with top-level statistics, and column statistics sorted by column type.
+
+```{r}
+library(skimr)
+skim(billboards)
+```
+
+Secondly the `skim()` function returns a `skim` object that allows manipulation by **dplyr**.
+Here it is simple to filter away all the variables without missing values.
+
+```{r, message=FALSE}
+library(dplyr)
+skim(billboards) %>%
+  filter(complete_rate < 1)
+```
+
+Hopefully, we will get to revisit this wonderfully merry dataset in the future.

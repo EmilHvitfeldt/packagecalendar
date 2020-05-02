@@ -1,0 +1,114 @@
+---
+title: "2018 Package Calendar"
+author: "Emil Hvitfeldt"
+output: html_document
+showonlyimage: false
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="../../calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        )
+      )
+    )
+  )
+)
+```
+
+```{css, echo=FALSE}
+twitter-widget {
+  margin: 0 auto;
+}
+```
+
+
+# 2018 Package Calendar
+
+The package calendar for this year was entirely conducted on Twitter. Below is the announcement tweet followed by all 24 individual tweets.
+
+```{r echo=FALSE}
+blogdown::shortcode("tweet", "1068581932294946816")
+```
+
+```{r, echo=FALSE}
+all_tweets <- c(
+  "1068977618660208640",
+  "1069386062458347520",
+  "1069670029585612800",
+  "1070184914849476609",
+  "1070524641146363904",
+  "1070750052480499712",
+  "1071116658922553344",
+  "1071531519016034304",
+  "1071821205793988608",
+  "1072192916527796224",
+  "1072555478213976064",
+  "1072916816408629248",
+  "1073258789300629504",
+  "1073690684979261440",
+  "1074074659644006400",
+  "1074374730268827648",
+  "1074716962620506116",
+  "1075160750979657728",
+  "1075563038302846976",
+  "1075924200588664833",
+  "1076350197351866368",
+  "1076595047041101824",
+  "1076930288859541504",
+  "1077319270953033730"
+)
+```
+
+```{r echo=FALSE}
+library(tweetrmd)
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[1]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[2]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[3]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[4]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[5]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[6]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[7]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[8]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[9]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[10]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[11]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[12]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[13]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[14]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[15]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[16]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[17]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[18]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[19]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[20]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[21]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[22]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[23]))
+tweet_embed(tweet_url("EmilHvitfeldt", all_tweets[24]))
+```

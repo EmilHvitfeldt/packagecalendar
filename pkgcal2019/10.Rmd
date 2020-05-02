@@ -1,0 +1,119 @@
+---
+slug: "10"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 10: reactable
+
+```{css}
+.ReactTable {
+  background: #2f3238;
+}
+```
+
+
+Welcome back for the 10th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at a new contender for table creation. 
+I'm talking about the [reactable](https://github.com/glin/reactable) package created by [Greg Lin](https://github.com/glin). 
+**reactable** is a wrapper around the JavaScript library [react-table](https://github.com/tannerlinsley/react-table).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("reactable")
+```
+
+We will be using the `elf` data from [day 7](https://www.hvitfeldt.me/pkgcal2019/7/).
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+set.seed(1234)
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly"))) %>%
+  mutate_if(is.numeric, jitter) %>%
+  mutate_if(is.numeric, ~ round(., 2))
+```
+
+You simply pass your data.frame to the `reactable()` function and it generates a nice looking table.
+
+```{r, message=FALSE}
+library(reactable) 
+
+reactable(elf)
+```
+
+**reactable** is highly customizable with its many arguments in `reactable()`.
+Additionally, if you know JavaScript you can raise it to new heights.
+
+There are many more things you can do with this package and I highly encourage you to visit the package [website](https://glin.github.io/reactable/).
+
+## Additional Resources
+
+- [Many examples](https://glin.github.io/reactable/articles/examples.html)
+
+<details>
+ <summary>Creating `elf` dataset</summary>
+
+```{r}
+library(tidyverse)
+set.seed(1234)
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly"))) %>%
+  mutate_if(is.numeric, jitter)
+```
+
+</details>

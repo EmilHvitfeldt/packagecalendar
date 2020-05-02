@@ -1,0 +1,151 @@
+---
+slug: "7"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 7: gghalves
+
+Welcome back for the 7th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will continue our look at the billboards data from [yesterday](https://www.hvitfeldt.me/pkgcal2019/6/).
+The package of the day is [gghalves](https://github.com/erocoar/gghalves) created by [Frederik Tiedemann](https://github.com/erocoar).
+
+The package is available from CRAN and can be downloaded with
+
+```{r, eval=FALSE}
+install.packages("gghalves")
+```
+
+we will be working with Santa's `elf` dataset.
+The data includes 50 observations for 3 elves (150 observations total) taken monthly describing the elfly capacities.
+Units have been removed due to being classified.
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+set.seed(1234) 
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly")))
+```
+
+```{r}
+library(skimr)
+skim(elf)
+```
+
+since we have a categorical variable (`elf`) and a couple of continuous variables we could use **ggplot2** to visualize the distributions.
+Let us take a first look at the TMI (Toy Making Intensity) variable. 
+We can create a boxplot for each elf by using `geom_boxplot()`
+
+```{r}
+library(ggplot2)
+ggplot(elf, aes(Elf, `Toy Making Intensity`)) +
+  geom_boxplot()
+```
+
+But we can't see the individual points.
+you could do a second plot with `geom_dotplot()`
+
+```{r}
+ggplot(elf, aes(Elf, `Toy Making Intensity`)) +
+  geom_dotplot(binaxis = "y", stackdir = "center", binwidth = 0.05)
+```
+
+But now we have two separate charts trying to show the same data.
+This is where **gghalves** comes in!
+**gghalves** allows you to split many of the aggregation geoms in half. 
+It is easier to show with an example. 
+We have the data from before and we want to showcase a boxplot and a dotplot at the same time.
+
+```{r}
+library(gghalves)
+ggplot(elf, aes(Elf, `Toy Making Intensity`)) +
+  geom_half_boxplot() +
+  geom_half_dotplot(binwidth = 0.05)
+```
+
+by using `geom_half_boxplot()` and `geom_half_dotplot()` we we able to elegently combine 2 plot types.
+
+The geoms respect general **ggplot2** elements so things like color
+
+```{r}
+ggplot(elf, aes(Elf, `Reindeer Training`, color = Elf)) +
+  geom_half_violin() +
+  geom_half_point(alpha = 0.6)
+```
+
+and factors
+
+```{r}
+ggplot(elf, aes(Elf, Jolliness, color = Elf)) +
+  geom_half_violin() +
+  geom_half_boxplot(side = "r") +
+  facet_wrap(~ factor(`Sugar Consumption` > mean(`Sugar Consumption`), 
+                      c(TRUE, FALSE), 
+                      c("High Sugar Comsumption", "Low Sugar Comsumption")))
+```
+
+<details>
+ <summary>Creating `elf` dataset</summary>
+
+```{r}
+library(tidyverse)
+set.seed(1234)
+
+elf <- iris %>%
+  rename(Elf = Species,
+         `Sugar Consumption` = Sepal.Width,
+         `Toy Making Intensity` = Sepal.Length,
+         `Jolliness` = Petal.Length,
+         `Reindeer Training` = Petal.Width) %>%
+  mutate(Elf = factor(as.numeric(Elf), labels = c("Buddy", "Twinkle", "Holly"))) %>%
+  mutate_if(is.numeric, jitter)
+```
+
+</details>

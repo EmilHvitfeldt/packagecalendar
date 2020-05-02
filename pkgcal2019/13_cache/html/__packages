@@ -1,0 +1,14 @@
+base
+knitr
+htmltools
+gtrendsR
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+reactable

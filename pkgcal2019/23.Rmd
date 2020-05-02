@@ -1,0 +1,83 @@
+---
+slug: "23"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 23: precommit
+
+
+Welcome back for the 23rd day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [precommit](https://github.com/lorenzwalthert/precommit) package by [Lorenz Walthert](https://twitter.com/lorenzwalthert).
+
+The package is not yet available from CRAN but can be downloaded with the following line of code.
+Also you need to have conda installed.
+
+```{r, eval=FALSE}
+remotes::install_github("lorenzwalthert/precommit")
+precommit::install_precommit()
+```
+
+Once you installed what you need you just run
+
+```{r, eval=FALSE}
+precommit::use_precommit()
+```
+
+to initiate the use of [pre-commit](https://pre-commit.com/).
+Now every time you run `git commit` the hooks listed in your `.pre-commit-config.yaml` will be executed before the commit.
+
+The package website includes a section on [available hooks](https://lorenzwalthert.github.io/precommit/articles/available-hooks.html) included in the package.
+This includes things like
+
+- `readme-rmd-rendered:` Make sure README.Rmd hasn’t been edited more recently than README.md, i.e. remind you to render the .Rmd to .md before committing.
+
+and 
+
+- `no-browser-statement`: Guarantees you that you don’t accidentally commit code with a browser() statement in it.
+
+Simply run `precommit::open_config()` to start configuring the hooks you want.
+
+Lastly, I'll quote a word of warning from the [README](https://lorenzwalthert.github.io/precommit/) 
+> Do not abort while hooks are running. Non-staged changes are stashed to a temp directory when the hooks are run and may not easily be recovered afterwards.

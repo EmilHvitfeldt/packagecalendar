@@ -1,0 +1,119 @@
+---
+slug: "19"
+output: 
+  html_document:
+    css: "calendar.css"
+showonlyimage: true
+description: " "
+type: packagecalendar
+layout:: single
+---
+
+<html>
+    <link rel="stylesheet" href="calendar-post.css"/>
+</html>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(htmltools)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+```{r, echo=FALSE}
+tags$section(class = "navigation",
+  tags$div(class = "nav-container",
+    tags$nav(
+      tags$ul(class = "nav-list",
+        tags$li(
+          tags$a(href = "/", "Home")
+        ),
+        tags$li(
+          tags$a(href = "/packagecalendar/2019/", "Back")
+        )
+      )
+    )
+  )
+)
+```
+
+# Day 19: ggtext
+
+Welcome back for the 19th day of the [#packagecalendar](https://twitter.com/hashtag/packagecalendar),
+today we will be taking a look at the [ggtext](https://github.com/clauswilke/ggtext) package by [Claus Wilke](https://twitter.com/ClausWilke).
+The **ggtext** package provides improved text rendering support for [ggplot2](https://ggplot2.tidyverse.org/).
+
+The package is not yet available from CRAN but can be downloaded with
+
+```{r, eval=FALSE}
+remotes::install_github("clauswilke/ggtext")
+```
+
+For the following example, we will use the "Last Christmas" data from earlier posts.
+
+```{r}
+# remotes::install_github("PMassicotte/gtrendsR")
+library(gtrendsR)
+last_christmas <- gtrends("Last Christmas", time = "today 3-m")$interest_over_time
+```
+
+And we will be building off the chart we created back in [day 11](https://www.hvitfeldt.me/pkgcal2019/11/)
+
+```{r, message=FALSE}
+library(ggplot2)
+library(slide)
+library(dplyr)
+last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick")
+```
+
+**ggtext** introduces a new theme element, `element_markdown()`, which behaves similarly to `element_text()` but renders the text as markdown/HTML.
+Suppose you want to selectively bold part of our title. 
+Using markdown we would put the text in double stars.
+
+```{r}
+last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick") +
+  labs(title = "I only want **this** part in bold")
+```
+
+But using normal **ggplot2** doesn't allow you to do that.
+There is where **ggtext** comes in, we use the `theme()` function to specify the plot title to be rendered using markdown.
+
+```{r, warning=FALSE}
+library(ggtext)
+last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick") +
+  labs(title = "I only want **this** part in bold") +
+  theme(plot.title = element_markdown())
+```
+
+Additionally, you can also use standard HTML syntax to modify your text
+
+```{r, warning=FALSE}
+last_christmas %>%
+  mutate(hits_ma5 = slide_dbl(hits, ~mean(.x), .before = 4)) %>%
+  ggplot(aes(date, hits)) +
+  geom_point() +
+  geom_line(aes(y = hits_ma5), color = "firebrick") +
+  labs(title =  "<i style='color:#FF3030'>I only want **this** part in bold</i>") +
+  theme(plot.title = element_markdown())
+```
+
